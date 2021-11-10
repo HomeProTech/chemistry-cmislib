@@ -26,6 +26,7 @@ response it receives.
 from urllib import urlencode
 import logging
 import httplib2
+import base64
 
 
 class RESTService(object):
@@ -152,6 +153,8 @@ class RESTService(object):
 
         h = httplib2.Http()
         h.add_credentials(username, password)
+        if 'Authorization' not in headers:
+            headers['Authorization'] = "Basic %s" % base64.b64encode(u"%s:%s" % (username, password))
         headers['User-Agent'] = self.user_agent
         if contentType is not None:
             headers['Content-Type'] = contentType
